@@ -60,6 +60,26 @@ public class EntryResourceTest {
           .then()
              .statusCode(200)
              .body(is("[]"));
+
+        // Validierungstest 1: Check-In nach Check-Out muss 400 Bad Request ergeben
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T18:00:00","checkOut":"2026-09-29T09:00:00"}
+              """)
+          .when().post("/entries")
+          .then()
+             .statusCode(400);
+
+        // Validierungstest 2: Fehlendes Pflichtfeld (checkOut fehlt) muss 400 Bad Request ergeben
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T08:00:00"}
+              """)
+          .when().post("/entries")
+          .then()
+             .statusCode(400);
     }
 
 }
